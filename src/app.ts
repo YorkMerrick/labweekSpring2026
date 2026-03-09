@@ -1,5 +1,7 @@
+// Ensure './config' is the first import
 import './config'
-import { filteredPrs, fetchPrComments } from './api/github'
+import { fetchPrComments } from './api/github/fetchPrComments'
+import { fetchFilteredPrs } from './api/github/fetchFilteredPrs'
 import { PipelineService } from './service/pipelineService'
 import type { RepoData } from './types/repoData'
 
@@ -8,7 +10,10 @@ function main() {
     owner: 'sky-uk',
     repo: 'sky-sport-group-android',
   }
-  
-  new PipelineService(filteredPrs, fetchPrComments).getComments(repoData).then((comments) => console.log(comments))
+
+  new PipelineService(fetchFilteredPrs, fetchPrComments)
+    .getComments(repoData)
+    .then((comments) => console.log(comments))
 }
+
 main()
