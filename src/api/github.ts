@@ -4,6 +4,7 @@ import type{ RepoData } from '../types/repoData'
 import type { Comment } from '../types/comments'
 import type { TimePeriod } from '../types/timePeriod'
 import { FilterTimeEnum } from '../enums/filterTimeEnum'
+import { getTimeGranularity } from './utils'
 
 async function fetchPrs(repoData: RepoData): Promise<PR[]> {
   const rawPrs = await octokit.rest.pulls.list({
@@ -48,37 +49,6 @@ async function filteredPrs(
     return prDate >= fromDate && prDate <= toDate
   })
   return filteredPrs
-}
-
-function getTimeGranularity(interval: FilterTimeEnum, filterTimePeriod?: TimePeriod) {
-  if (filterTimePeriod) {
-    return filterTimePeriod
-  }
-
-  const milisecondInADay = 24 * 60 * 60 * 1000
-
-  const now = new Date()
-  let from: Date
-
-  switch (interval) {
-    case FilterTimeEnum.DAY:
-      from = new Date(now.getTime() - milisecondInADay)
-      break
-    case FilterTimeEnum.WEEK:
-      from = new Date(now.getTime() - 7 * milisecondInADay)
-      break
-    case FilterTimeEnum.MONTH:
-      from = new Date(now.getTime() - 30 * milisecondInADay)
-      break
-    default:
-      from = new Date(now.getTime() - 7 * milisecondInADay)
-      break
-  }
-
-  return {
-    from: from.toISOString(),
-    to: now.toISOString(),
-  }
 }
 
 async function fetchPrComments(prNumber: number, repoData: RepoData) {

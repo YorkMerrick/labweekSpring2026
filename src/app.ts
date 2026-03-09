@@ -10,7 +10,6 @@ function main() {
   }
   
   new PipelineService(filteredPrs, fetchPrComments).getComments(repoData).then((comments) => console.log(comments))
-  // fetchPrComments(11, repoData).then((comments) => console.log(comments))
 }
 
 main()
