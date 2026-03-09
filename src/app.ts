@@ -1,14 +1,16 @@
 import './config'
-import { fetchPrs, fetchPrComments } from './api/github'
+import { filteredPrs, fetchPrComments } from './api/github'
+import { PipelineService } from './service/pipelineService'
 import type { RepoData } from './types/repoData'
 
 function main() {
   const repoData: RepoData = {
-    owner: 'YorkMerrick',
-    repo: 'labweekSpring2026',
+    owner: 'sky-uk',
+    repo: 'sky-sport-group-android',
   }
-  fetchPrs(repoData).then((prs) => console.log(prs))
-  fetchPrComments(11, repoData).then((comments) => console.log(comments))
+  
+  new PipelineService(filteredPrs, fetchPrComments).getComments(repoData).then((comments) => console.log(comments))
+  // fetchPrComments(11, repoData).then((comments) => console.log(comments))
 }
 
 main()
