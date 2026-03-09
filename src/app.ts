@@ -16,24 +16,44 @@ type SimplePr = {
   createdAt: string;
 }
 
+type RepoData = {
+  owner: string;
+  repo: string;
+}
+
+type Comment = {
+  body: string;
+  prNumber: number;
+  author: string;
+}
+
 async function main() {
   console.log('Hello, world!');
-  const octoResponse = await getPRs().then((response) => {
+  const octoResponse = await getPRs({ owner: "sky-uk", repo: "sky-sport-group-android" }).then((response) => {
     return response;
   });
   console.log(octoResponse);
+
+
+  octoResponse.forEach(async (pr) => {
+    console.log(`PR #${pr.number}: ${pr.title} by ${pr.author}`);
+    const comments = await getComments(pr.number).then((response) => {
+      return response.filter(comment => comment.author.includes("copilot"));
+    });
+    console.log(`Comments for PR #${pr.number}:`, comments);
+  });
 }
 
 main()
 
-async function getPRs() {
+async function getPRs(repoData: RepoData) {
   const res = await octokit.rest.pulls.list({
-    owner: "sky-uk",
-    repo: "sky-sport-group-android",
+    owner: repoData.owner,
+    repo: repoData.repo,
     state: "closed",
     sort: "updated",
     direction: "desc",
-    per_page: 1,
+    per_page: 3,
   }).then((response) => {
     return response.data;
   });
@@ -47,3 +67,19 @@ async function getPRs() {
   }));
   return simplePrs;
 };
+
+async function getComments(prNumber: number) {
+  const res = await octokit.rest.pulls.listReviews({
+    owner: "sky-uk",
+    repo: "sky-sport-group-android",
+    pull_number: prNumber,
+  })
+
+  const comments: Comment[] = res.data.map(comment => ({
+    body: comment.body ?? "",
+    prNumber: prNumber,
+    author: comment.user?.login ?? "unknown",
+  }));
+
+  return comments;
+}
