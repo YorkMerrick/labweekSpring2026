@@ -11,5 +11,4 @@ function main() {
   
   new PipelineService(filteredPrs, fetchPrComments).getComments(repoData).then((comments) => console.log(comments))
 }
-
 main()

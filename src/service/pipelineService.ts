@@ -3,10 +3,13 @@ import type { RepoData } from "../types/repoData"
 import type { Comment } from "../types/comments"
 
 class PipelineService {
-    prFetcher: CallableFunction
-    commentFetcher: CallableFunction
+    prFetcher: (repoData: RepoData) => Promise<PR[]>
+    commentFetcher: (prNumber: number, repoData: RepoData) => Promise<Comment[]>
 
-    constructor(prFetcher: CallableFunction, commentFetcher: CallableFunction) {
+    constructor(
+        prFetcher: (repoData: RepoData) => Promise<PR[]>, 
+        commentFetcher: (prNumber: number, repoData: RepoData) => Promise<Comment[]>
+    ) {
         this.prFetcher = prFetcher
         this.commentFetcher = commentFetcher
     }
