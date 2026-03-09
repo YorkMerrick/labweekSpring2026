@@ -1,7 +1,7 @@
 enum FilterTimeEnum {
-    DAY = 'day',
-    WEEK = 'week',
-    MONTH = 'month',
+  DAY = 'day',
+  WEEK = 'week',
+  MONTH = 'month',
 }
 
 export { FilterTimeEnum }

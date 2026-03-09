@@ -1,4 +1,4 @@
 export type RepoData = {
-  owner: string,
-  repo: string,
+  owner: string
+  repo: string
 }
