@@ -1,12 +1,14 @@
 import type { PR } from '../types/pr'
 import { octokit } from './octokit'
+import type{ RepoData } from '../types/repoData'
+import type { Comment } from '../types/comments'
 
-async function fetchPrs(): Promise<PR[]> {
+async function fetchPrs(repoData: RepoData): Promise<PR[]> {
   const rawPrs = await octokit.paginate(octokit.rest.pulls.list, {
-    owner: 'YorkMerrick',
-    repo: 'labweekSpring2026',
-    state: 'open',
-    per_page: 100,
+    owner: repoData.owner,
+    repo: repoData.repo,
+    state: 'closed',
+    per_page: 30,
   })
 
   const simplePrs: PR[] = rawPrs.map((pr) => ({
@@ -20,4 +22,20 @@ async function fetchPrs(): Promise<PR[]> {
   return simplePrs
 }
 
-export { fetchPrs }
+async function fetchPrComments(prNumber: number, repoData: RepoData) {
+  const rawComments = await octokit.rest.pulls.listReviews({
+    owner: repoData.owner,
+    repo: repoData.repo,
+    pull_number: prNumber,
+  })
+
+  const comments: Comment[] = rawComments.data.map((comment) => ({
+    id: comment.id,
+    author: comment.user?.login ?? 'unknown',
+    body: comment.body ?? '',
+  }))
+
+  return comments
+}
+
+export { fetchPrs, fetchPrComments }
