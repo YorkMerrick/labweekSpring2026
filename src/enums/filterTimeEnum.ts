@@ -1,8 +1,6 @@
-import { format } from "node:path"
-
 enum FilterTimeEnum {
-    WEEK = 'week',
     DAY = 'day',
+    WEEK = 'week',
     MONTH = 'month',
 }
 
