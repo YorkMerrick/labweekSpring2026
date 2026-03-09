@@ -42,6 +42,6 @@
     "skipLibCheck": true,
     "removeComments": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
