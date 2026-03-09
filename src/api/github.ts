@@ -2,7 +2,7 @@ import type { PR } from '../types/pr'
 import { octokit } from './octokit'
 import type{ RepoData } from '../types/repoData'
 import type { Comment } from '../types/comments'
-import type { FilterTimePeriod } from '../types/filterTimePeriod'
+import type { TimePeriod } from '../types/timePeriod'
 import { FilterTimeEnum } from '../enums/filterTimeEnum'
 
 async function fetchPrs(repoData: RepoData): Promise<PR[]> {
@@ -31,7 +31,7 @@ async function fetchPrs(repoData: RepoData): Promise<PR[]> {
 async function filteredPrs(
   repoData: RepoData,
   interval: FilterTimeEnum = FilterTimeEnum.WEEK,
-  filterTimePeriod?: FilterTimePeriod,
+  filterTimePeriod?: TimePeriod,
 ) {
 
   const timeGranularity = getTimeGranularity(interval, filterTimePeriod)
@@ -50,7 +50,7 @@ async function filteredPrs(
   return filteredPrs
 }
 
-function getTimeGranularity(interval: FilterTimeEnum, filterTimePeriod?: FilterTimePeriod) {
+function getTimeGranularity(interval: FilterTimeEnum, filterTimePeriod?: TimePeriod) {
   if (filterTimePeriod) {
     return filterTimePeriod
   }

@@ -1,4 +1,4 @@
-export type FilterTimePeriod = {
+export type TimePeriod = {
     to: string
     from: string
 }
