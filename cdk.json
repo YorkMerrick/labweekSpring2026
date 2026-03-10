@@ -1,0 +1,7 @@
+{
+  "app": "npx tsx src/bin/app.ts",
+  "watch": {
+    "include": ["src/**/*.ts", "src/**/**/*.ts"],
+    "exclude": ["**/*.test.ts", "dist/**"]
+  }
+}
