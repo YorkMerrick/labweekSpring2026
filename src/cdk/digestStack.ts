@@ -39,20 +39,24 @@ export class DigestStack extends Stack {
       environment: {
         SECRET_ARN: secret.secretArn,
       },
-      logRetention: logs.RetentionDays.ONE_WEEK,
+      logGroup: new logs.LogGroup(this, 'PipelineFnLogGroup', {
+        retention: logs.RetentionDays.ONE_WEEK,
+      }),
     })
     secret.grantRead(pipelineFn)
 
-    // 4) Agent Lambda: read JSON, call Bedrock, write Markdown to S3
-    const agentFn = new nodejs.NodejsFunction(this, 'AgentFn', {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      entry: 'lambdas/agent/index.ts',
-      handler: 'handler',
-      timeout: Duration.minutes(5),
-      environment: {
-        MODEL_ID: '', //"anthropic.claude-3-haiku-20240307", // or amazon.nova-lite-v1:0
-      },
-      logRetention: logs.RetentionDays.ONE_WEEK,
-    })
+    // // 4) Agent Lambda: read JSON, call Bedrock, write Markdown to S3
+    // const agentFn = new nodejs.NodejsFunction(this, 'AgentFn', {
+    //   runtime: lambda.Runtime.NODEJS_20_X,
+    //   entry: 'src/lambdas/agent/.ts',
+    //   handler: 'handler',
+    //   timeout: Duration.minutes(5),
+    //   environment: {
+    //     MODEL_ID: '', //"anthropic.claude-3-haiku-20240307", // or amazon.nova-lite-v1:0
+    //   },
+    //   logGroup: new logs.LogGroup(this, 'AgentFnLogGroup', {
+    //     retention: logs.RetentionDays.ONE_WEEK,
+    //   }),
+    // })
   }
 }
