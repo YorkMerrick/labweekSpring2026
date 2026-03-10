@@ -4,6 +4,8 @@ import { fetchPrComments } from './api/github/fetchPrComments'
 import { fetchFilteredPrs } from './api/github/fetchFilteredPrs'
 import { PipelineService } from './service/pipelineService'
 import type { RepoData } from './types/repoData'
+import type { Comment } from './types/comments'
+import { promises } from 'fs'
 
 function main() {
   const repoData: RepoData = {
@@ -13,7 +15,20 @@ function main() {
 
   new PipelineService(fetchFilteredPrs, fetchPrComments)
     .getComments(repoData)
-    .then((comments) => console.log(comments))
+    .then((fetchedComments) => writeCommentToFile('./comments.json', fetchedComments))
+    .catch((error) => {
+      console.error('Error fetching comments:', error)
+    })
 }
 
 main()
+
+async function writeCommentToFile(filepath: string, comments: Comment[]) {
+  promises
+    .writeFile('comments.json', JSON.stringify(comments, null, 2), {
+      flag: 'w',
+    })
+    .then(() => {
+      console.log('Finish Write')
+    })
+}
