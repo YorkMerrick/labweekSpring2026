@@ -1,10 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { filterPrs, fetchFilteredPrs } from './fetchFilteredPrs'
 import { fetchPrs } from './fetchPrs'
-import type { PR } from '../../types/pr'
-import type { RepoData } from '../../types/repoData'
 import { FilterTimeEnum } from '../../enums/filterTimeEnum'
 import * as timeUtils from '../utils/time'
+import type { PR, RepoData } from '../../types/repo'
 
 vi.mock('./fetchPrs')
 
@@ -17,18 +16,20 @@ describe('filterPrs', () => {
     {
       number: 1,
       title: 'A',
-      author: 'alice',
+      authorName: 'alice',
+      authorEmail: 'alice@email.com',
       url: '',
-      created_at: oneDayAgo,
-      last_updated: oneDayAgo,
+      createdAt: oneDayAgo,
+      lastUpdated: oneDayAgo,
     },
     {
       number: 2,
       title: 'B',
-      author: 'bob',
+      authorName: 'bob',
+      authorEmail: 'bob@email.com',
       url: '',
-      created_at: twoDaysAgo,
-      last_updated: twoDaysAgo,
+      createdAt: twoDaysAgo,
+      lastUpdated: twoDaysAgo,
     },
   ]
 
@@ -52,18 +53,20 @@ describe('fetchFilteredPrs', () => {
     {
       number: 1,
       title: 'A',
-      author: 'alice',
+      authorName: 'alice',
+      authorEmail: 'alice@email.com',
       url: '',
-      created_at: '2026-03-01T12:00:00Z',
-      last_updated: '2026-03-01T12:00:00Z',
+      createdAt: '2026-03-01T12:00:00Z',
+      lastUpdated: '2026-03-01T12:00:00Z',
     },
     {
       number: 2,
       title: 'B',
-      author: 'bob',
+      authorName: 'bob',
+      authorEmail: 'bob@email.com',
       url: '',
-      created_at: '2026-03-08T12:00:00Z',
-      last_updated: '2026-03-08T12:00:00Z',
+      createdAt: '2026-03-08T12:00:00Z',
+      lastUpdated: '2026-03-08T12:00:00Z',
     },
   ]
 

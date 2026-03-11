@@ -1,9 +1,10 @@
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager'
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda'
-import type { Comment } from '../types/comments.js'
-import { PipelineService } from '../service/pipelineService.js'
-import { fetchFilteredPrs } from '../api/github/fetchFilteredPrs.js'
-import { fetchPrComments } from '../api/github/fetchPrComments.js'
+import { PipelineService } from '../service/pipelineService'
+import { fetchFilteredPrs } from '../api/github/fetchFilteredPrs'
+import { fetchPrComments } from '../api/github/fetchPrComments'
+import type { RepoData } from '../types/repo'
+import { loadRepos } from '../loaders/loadRepos'
 
 const lambda = new LambdaClient({})
 const secrets = new SecretsManagerClient({})
@@ -14,15 +15,11 @@ export const handler = async () => {
   // Get credentials, tokens, etc.
   const sec = await secrets.send(new GetSecretValueCommand({ SecretId: secretArn }))
 
-  let data: Comment[]
-
-  const repoData = {
-    owner: 'sky-uk',
-    repo: 'sky-sport-group-android',
-  }
+  // TODO: Define input of repo data to pipeline
+  const repos: RepoData[] = loadRepos()
 
   new PipelineService(fetchFilteredPrs, fetchPrComments)
-    .getComments(repoData)
+    .buildAiPromptForRepos(repos)
     .then(async (fetchedComments) => {
       console.log(fetchedComments)
       await lambda.send(

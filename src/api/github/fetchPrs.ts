@@ -1,6 +1,5 @@
-import { octokit } from '../../client/octokit.js'
-import type { PR } from '../../types/pr.js'
-import type { RepoData } from '../../types/repoData.js'
+import { octokit } from '../clients/octokit.js'
+import type { PR, RepoData } from '../../types/repo.js'
 
 async function fetchPrs(repoData: RepoData): Promise<PR[]> {
   const rawPrs = await octokit.rest.pulls
@@ -19,10 +18,11 @@ async function fetchPrs(repoData: RepoData): Promise<PR[]> {
   const simplePrs: PR[] = rawPrs.map((pr) => ({
     number: pr.number,
     title: pr.title,
-    author: pr.user?.login ?? 'unknown',
+    authorName: pr.user?.login ?? 'unknown',
+    authorEmail: pr.user?.email ?? 'unknown',
     url: pr.html_url,
-    created_at: pr.created_at,
-    last_updated: pr.updated_at,
+    createdAt: pr.created_at,
+    lastUpdated: pr.updated_at,
   }))
 
   return simplePrs

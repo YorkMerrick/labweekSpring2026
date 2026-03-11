@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { fetchPrComments } from './fetchPrComments'
-import { octokit } from '../../client/octokit'
-import type { RepoData } from '../../types/repoData'
-import type { Comment } from '../../types/comments'
+import { octokit } from '../clients/octokit'
+import type { Comment, RepoData } from '../../types/repo'
 
 describe('fetchPrComments', () => {
   const repoData: RepoData = { owner: 'YorkMerrick', repo: 'labweekSpring2026' }

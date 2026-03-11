@@ -3,29 +3,26 @@ import './config.js'
 import { fetchPrComments } from './api/github/fetchPrComments.js'
 import { fetchFilteredPrs } from './api/github/fetchFilteredPrs.js'
 import { PipelineService } from './service/pipelineService.js'
-import type { RepoData } from './types/repoData.js'
-import type { Comment } from './types/comments.js'
 import { promises } from 'fs'
+import type { AiPromptData } from './types/aiPromptData'
+import { loadRepos } from './loaders/loadRepos'
 
 function main() {
-  const repoData: RepoData = {
-    owner: 'sky-uk',
-    repo: 'sky-sport-group-android',
-  }
+  const repos = loadRepos('input.json')
 
   new PipelineService(fetchFilteredPrs, fetchPrComments)
-    .getComments(repoData)
-    .then((fetchedComments) => writeCommentToFile('./comments.json', fetchedComments))
+    .buildAiPromptForRepos(repos)
+    .then((promptData) => writePromptDataToFile('promptData.json', promptData))
     .catch((error) => {
-      console.error('Error fetching comments:', error)
+      console.error('Error creating prompt data:', error)
     })
 }
 
 main()
 
-async function writeCommentToFile(filepath: string, comments: Comment[]) {
+async function writePromptDataToFile(filepath: string, promptData: AiPromptData) {
   promises
-    .writeFile('comments.json', JSON.stringify(comments, null, 2), {
+    .writeFile(filepath, JSON.stringify(promptData, null, 2), {
       flag: 'w',
     })
     .then(() => {

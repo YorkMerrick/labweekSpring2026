@@ -1,5 +1,38 @@
 # labweekSpring2026
 
+### Setup
+
+1. Clone the repo
+2. Install dependencies
+```bash
+npm install
+```
+3. Create the env variables and populate
+
+```bash 
+cp .env.example .env
+```
+
+4. Create input.json and populate with relevant repos
+
+```bash 
+cp input.example.json input.json
+```
+
+5. After setting up aws profile using
+
+```bash 
+aws configure sso
+```
+- note the PROFILE name and run
+```bash 
+cdk bootstrap --profile PROFILE
+cdk synthesize
+cdk deploy 
+```
+
+This will deploy the CDK stack to AWS, creating the appropriate secrets, s3 and lambda.
+
 ### Example output Android
 
 ```

@@ -12,13 +12,11 @@ import {
   aws_logs as logs,
   App,
 } from 'aws-cdk-lib'
-import { Construct } from 'constructs'
 
 export class DigestStack extends Stack {
   constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props)
 
-    // 2) Optional: secret for GitHub token / webhook URLs
     const secret = new secrets.Secret(this, 'WeeklyDigestSecrets', {
       secretName: 'weekly-digest/secrets',
       generateSecretString: {
