@@ -1,6 +1,6 @@
 # labweekSpring2026
 
-### Example output
+### Example output Android
 
 ```
 Weekly Engineering Digest
@@ -74,6 +74,83 @@ Tracking architecture refactored with new gating + CMP personalisation logic.
 Session flows updated with sessionType and login‑journey context.
 Runtime theming + News icons introduced with new assets and overrides.
 Content‑grouping models modularised, cleaning architecture boundaries.
+```
+
+### Example output iOS
+
+```
+Weekly Engineering Digest
+Tooling & Build System Updates
+
+Restored missing NewsGB launch‑screen asset catalog to fix local News build failures.
+Updated Xcode project references across multiple PRs, mainly adding new files and relocating feature‑toggle sources.
+Bumped gdp‑streaming‑auth‑framework-ios to 4.1.0 with updated transitive security dependency.
+Impact: Improves build stability and aligns project structure.
+Action Consideration: Awareness only; no immediate workflow change.
+Context Contact: AndyNattrass, ryangibson-sky
+
+Environment / Developer Readiness
+
+Feature‑toggle keys migrated to consistent snake_case across the codebase.
+Deep‑link toggle handling updated with safer production gating.
+UI tests restructured with new F1StreamSelector screen objects.
+Impact: Reduces ambiguity and improves local debugging and test reliability.
+Action Consideration: Teams may want to ensure local tooling recognises updated toggle names.
+Context Contact: roryobryan-sky, TKN02
+
+Feature Additions
+
+Added SubscriptionService and ProductService wired into app startup via Remote Config.
+Introduced profile name display via JWT decoding for More Menu.
+Added MoreMenuHeaderTitle domain model and use case for dynamic header resolution.
+Impact: Lays groundwork for subscriptions and enhances personalised UI.
+Action Consideration: Awareness of new app‑level dependencies and JWT‑based name flows.
+Context Contact: tonyzhou-merapar, ClaudiaDanciu
+
+Refactoring & Architecture
+
+Consolidated feature‑toggle logic into FeatureToggleService, removing ad‑hoc helpers.
+Reorganised related files in Xcode project for clearer module boundaries.
+Removed legacy StreamSelector tests and replaced with focused F1 variants.
+Impact: Simplifies toggle management and improves test maintainability.
+Action Consideration: No immediate action; architectural clarity improved.
+Context Contact: roryobryan-sky, TKN02
+
+Testing Changes
+
+Added new unit tests for toggle deep‑linking, subscription flows, and More Menu name decoding.
+UI test plans updated to register F1‑specific selectors.
+Multiple PRs introduced small test fixture updates for renamed toggle keys.
+Impact: Strengthens regression protection in new and refactored areas.
+Action Consideration: Watch for renamed fixtures when updating downstream tests.
+Context Contact: roryobryan-sky, tonyzhou-merapar, TKN02
+
+Behavioural / Runtime Changes
+
+Updated link handling so webLink vs externalWebLink actions preserve true routing semantics.
+Applied baseline offset to fix clipped UINavigationBar titles.
+More Menu title now updates reactively based on login state and ID token changes.
+Impact: User‑visible behavioural correctness improvements across navigation and link routing.
+Action Consideration: Awareness for QA when validating link flows and navigation titles.
+Context Contact: ScruffyHipster, sergeyandreev, ClaudiaDanciu
+
+Risks, Dependencies & Cross‑Team Considerations
+
+Introduction of JWT‑based name decoding adds dependency on ID token stability.
+Subscription flows now integrate with backend responses and Remote Config.
+Updated security frameworks may affect downstream platform integrations.
+Impact: Cross‑team awareness beneficial around auth, subscriptions, and security alignment.
+Action Consideration: No immediate action; monitor for token schema or backend contract changes.
+Context Contact: tonyzhou-merapar, ryangibson-sky
+
+
+TL;DR
+
+Feature‑toggle system consolidated and renamed for consistency.
+New subscription and profile‑name flows integrated into app startup.
+Multiple asset, routing, and UI correctness fixes applied.
+Significant test restructuring, especially for F1 selectors.
+Dependency bumps and project reorganisation improve build stability.
 ```
 
 ### Prompt
