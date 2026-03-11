@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { fetchPrs } from './fetchPrs'
-import { octokit } from '../../client/octokit'
-import type { RepoData } from '../../types/repoData'
-import type { PR } from '../../types/pr'
+import { octokit } from '../clients/octokit'
+import type { PR, RepoData } from '../../types/repo'
 
 describe('fetchPrs', () => {
   const repoData: RepoData = { owner: 'YorkMerrick', repo: 'labweekSpring2026' }
@@ -11,7 +10,7 @@ describe('fetchPrs', () => {
     {
       number: 1,
       title: 'Add new feature',
-      user: { login: 'alice' },
+      user: { login: 'alice', email: 'alice@email.com' },
       html_url: 'https://github.com/owner/repo/pull/1',
       created_at: '2026-03-01T12:00:00Z',
       updated_at: '2026-03-02T12:00:00Z',
@@ -54,18 +53,20 @@ describe('fetchPrs', () => {
       {
         number: 1,
         title: 'Add new feature',
-        author: 'alice',
+        authorName: 'alice',
+        authorEmail: 'alice@email.com',
         url: 'https://github.com/owner/repo/pull/1',
-        created_at: '2026-03-01T12:00:00Z',
-        last_updated: '2026-03-02T12:00:00Z',
+        createdAt: '2026-03-01T12:00:00Z',
+        lastUpdated: '2026-03-02T12:00:00Z',
       },
       {
         number: 2,
         title: 'Fix bug',
-        author: 'unknown', // fallback for missing user
+        authorName: 'unknown', // fallback for missing user
+        authorEmail: 'unknown', // fallback for missing email
         url: 'https://github.com/owner/repo/pull/2',
-        created_at: '2026-03-03T12:00:00Z',
-        last_updated: '2026-03-04T12:00:00Z',
+        createdAt: '2026-03-03T12:00:00Z',
+        lastUpdated: '2026-03-04T12:00:00Z',
       },
     ]
 

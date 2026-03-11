@@ -1,6 +1,5 @@
-import { octokit } from '../../client/octokit.js'
-import type { Comment } from '../../types/comments.js'
-import type { RepoData } from '../../types/repoData.js'
+import type { Comment, RepoData } from '../../types/repo.js'
+import { octokit } from '../clients/octokit.js'
 
 async function fetchPrComments(
   prNumber: number,

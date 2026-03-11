@@ -67,3 +67,8 @@ package-lock.json
 dist
 .env
 cdk.out/
+
+promptData.json
+pullRequests.json
+pullRequestsFiltered.json
+input.json

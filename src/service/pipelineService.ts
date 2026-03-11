@@ -1,6 +1,6 @@
-import type { PR } from '../types/pr.js'
-import type { RepoData } from '../types/repoData.js'
-import type { Comment } from '../types/comments.js'
+import { aiPromptMapper } from '../mappers/aiPromptMapper.js'
+import type { AiPromptData } from '../types/aiPromptData.js'
+import type { Comment, PR, RepoData } from '../types/repo.js'
 
 type PrFetcher = (repoData: RepoData) => Promise<PR[]>
 type CommentFetcher = (prNumber: number, repoData: RepoData, prAuthor: string) => Promise<Comment[]>
@@ -14,16 +14,20 @@ class PipelineService {
     this.commentFetcher = commentFetcher
   }
 
-  async getComments(repoData: RepoData) {
-    const listOfPrs: PR[] = await this.prFetcher(repoData)
-    const listOfComments: Comment[] = []
+  async buildAiPromptForRepos(repos: RepoData[]): Promise<AiPromptData> {
+    return Promise.all(
+      repos.map(async (repo) => {
+        const prs = await this.prFetcher(repo)
+        const prsWithComments = await Promise.all(
+          prs.map(async (pr) => ({
+            pr: pr,
+            comments: await this.commentFetcher(pr.number, repo, pr.authorName),
+          }))
+        )
 
-    for (const pr of listOfPrs) {
-      const comments = await this.commentFetcher(pr.number, repoData, pr.author)
-      listOfComments.push(...comments)
-    }
-
-    return listOfComments
+        return aiPromptMapper(repo, prsWithComments)
+      })
+    )
   }
 }
 
