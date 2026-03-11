@@ -1,9 +1,9 @@
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager'
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda'
-import type { Comment } from '../types/comments'
-import { PipelineService } from '../service/pipelineService'
-import { fetchFilteredPrs } from '../api/github/fetchFilteredPrs'
-import { fetchPrComments } from '../api/github/fetchPrComments'
+import type { Comment } from '../types/comments.js'
+import { PipelineService } from '../service/pipelineService.js'
+import { fetchFilteredPrs } from '../api/github/fetchFilteredPrs.js'
+import { fetchPrComments } from '../api/github/fetchPrComments.js'
 
 const lambda = new LambdaClient({})
 const secrets = new SecretsManagerClient({})

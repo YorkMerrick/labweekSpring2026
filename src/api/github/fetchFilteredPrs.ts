@@ -1,9 +1,9 @@
-import { FilterTimeEnum } from '../../enums/filterTimeEnum'
-import type { PR } from '../../types/pr'
-import type { RepoData } from '../../types/repoData'
-import type { FilterTimePeriod } from '../../types/filterTimePeriod'
-import { getTimePeriodFromInterval } from '../utils/time'
-import { fetchPrs } from './fetchPrs'
+import { FilterTimeEnum } from '../../enums/filterTimeEnum.js'
+import type { PR } from '../../types/pr.js'
+import type { RepoData } from '../../types/repoData.js'
+import type { FilterTimePeriod } from '../../types/filterTimePeriod.js'
+import { getTimePeriodFromInterval } from '../utils/time.js'
+import { fetchPrs } from './fetchPrs.js'
 import { writeFile } from 'fs/promises'
 
 function filterPrs(prs: PR[], timePeriod: FilterTimePeriod) {

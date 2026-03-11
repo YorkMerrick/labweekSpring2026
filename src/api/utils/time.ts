@@ -1,5 +1,5 @@
-import { FilterTimeEnum } from '../../enums/filterTimeEnum'
-import type { FilterTimePeriod } from '../../types/filterTimePeriod'
+import { FilterTimeEnum } from '../../enums/filterTimeEnum.js'
+import type { FilterTimePeriod } from '../../types/filterTimePeriod.js'
 
 const MILLISECONDS_IN_A_DAY: number = 24 * 60 * 60 * 1000
 

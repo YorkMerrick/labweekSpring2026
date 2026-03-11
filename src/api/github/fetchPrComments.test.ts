@@ -26,7 +26,7 @@ describe('fetchPrComments', () => {
     },
     {
       id: 4,
-      user: { login: 'copilot-helper' },
+      user: { login: 'copilot-bot' },
       body: null,
     },
   ]
@@ -44,7 +44,7 @@ describe('fetchPrComments', () => {
   })
 
   it('calls octokit.rest.pulls.listReviews with correct parameters', async () => {
-    await fetchPrComments(prNumber, repoData)
+    await fetchPrComments(prNumber, repoData, 'copilot-bot')
 
     expect(listReviewsSpy).toHaveBeenCalledWith({
       owner: repoData.owner,
@@ -54,7 +54,7 @@ describe('fetchPrComments', () => {
   })
 
   it('maps comments correctly and filters for copilot authors', async () => {
-    const result: Comment[] = await fetchPrComments(prNumber, repoData)
+    const result: Comment[] = await fetchPrComments(prNumber, repoData, 'copilot-bot')
 
     const expected: Comment[] = [
       {
@@ -64,7 +64,7 @@ describe('fetchPrComments', () => {
       },
       {
         id: 4,
-        author: 'copilot-helper',
+        author: 'copilot-bot',
         body: '', // fallback for null body
       },
     ]
@@ -77,7 +77,7 @@ describe('fetchPrComments', () => {
       data: [{ id: 5, user: { login: 'alice' }, body: 'ok' }],
     } as any)
 
-    const result = await fetchPrComments(prNumber, repoData)
+    const result = await fetchPrComments(prNumber, repoData, 'copilot-bot')
     expect(result).toEqual([])
   })
 })
