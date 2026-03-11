@@ -1,9 +1,9 @@
-import type { PR } from '../types/pr'
-import type { RepoData } from '../types/repoData'
-import type { Comment } from '../types/comments'
+import type { PR } from '../types/pr.js'
+import type { RepoData } from '../types/repoData.js'
+import type { Comment } from '../types/comments.js'
 
 type PrFetcher = (repoData: RepoData) => Promise<PR[]>
-type CommentFetcher = (prNumber: number, repoData: RepoData) => Promise<Comment[]>
+type CommentFetcher = (prNumber: number, repoData: RepoData, prAuthor: string) => Promise<Comment[]>
 
 class PipelineService {
   prFetcher: PrFetcher
@@ -19,7 +19,7 @@ class PipelineService {
     const listOfComments: Comment[] = []
 
     for (const pr of listOfPrs) {
-      const comments = await this.commentFetcher(pr.number, repoData)
+      const comments = await this.commentFetcher(pr.number, repoData, pr.author)
       listOfComments.push(...comments)
     }
 

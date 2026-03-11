@@ -1,6 +1,6 @@
-import { octokit } from '../../client/octokit'
-import type { PR } from '../../types/pr'
-import type { RepoData } from '../../types/repoData'
+import { octokit } from '../../client/octokit.js'
+import type { PR } from '../../types/pr.js'
+import type { RepoData } from '../../types/repoData.js'
 
 async function fetchPrs(repoData: RepoData): Promise<PR[]> {
   const rawPrs = await octokit.rest.pulls

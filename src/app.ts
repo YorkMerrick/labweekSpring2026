@@ -1,10 +1,10 @@
 // Ensure './config' is the first import
-import './config'
-import { fetchPrComments } from './api/github/fetchPrComments'
-import { fetchFilteredPrs } from './api/github/fetchFilteredPrs'
-import { PipelineService } from './service/pipelineService'
-import type { RepoData } from './types/repoData'
-import type { Comment } from './types/comments'
+import './config.js'
+import { fetchPrComments } from './api/github/fetchPrComments.js'
+import { fetchFilteredPrs } from './api/github/fetchFilteredPrs.js'
+import { PipelineService } from './service/pipelineService.js'
+import type { RepoData } from './types/repoData.js'
+import type { Comment } from './types/comments.js'
 import { promises } from 'fs'
 
 function main() {
