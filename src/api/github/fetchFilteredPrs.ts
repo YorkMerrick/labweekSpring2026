@@ -5,7 +5,7 @@ import { getTimePeriodFromInterval } from '../utils/time.js'
 import { fetchPrs } from './fetchPrs.js'
 import { writeFile } from 'fs/promises'
 
-function filterPrs(prs: PR[], timePeriod: FilterTimePeriod) {
+function filterPrs(prs: PR[], timePeriod: FilterTimePeriod): PR[] {
   const fromDate = new Date(timePeriod.from)
   const toDate = new Date(timePeriod.to)
 
@@ -18,7 +18,7 @@ function filterPrs(prs: PR[], timePeriod: FilterTimePeriod) {
 async function fetchFilteredPrs(
   repoData: RepoData,
   interval: FilterTimeEnum = FilterTimeEnum.WEEK
-) {
+): Promise<PR[]> {
   const timeGranularity = getTimePeriodFromInterval(interval)
   const pullRequests = await fetchPrs(repoData)
 
