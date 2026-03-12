@@ -18,8 +18,8 @@ async function fetchPrs(repoData: RepoData): Promise<PR[]> {
   const simplePrs: PR[] = rawPrs.map((pr) => ({
     number: pr.number,
     title: pr.title,
-    authorName: pr.user?.login ?? 'unknown',
-    authorEmail: pr.user?.email ?? 'unknown',
+    authorName: pr.user?.name ?? pr.user?.login ?? null,
+    authorEmail: pr.user?.email ?? null,
     url: pr.html_url,
     createdAt: pr.created_at,
     lastUpdated: pr.updated_at,
