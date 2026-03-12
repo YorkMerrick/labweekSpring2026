@@ -4,8 +4,8 @@ import { fetchPrComments } from './api/github/fetchPrComments.js'
 import { fetchFilteredPrs } from './api/github/fetchFilteredPrs.js'
 import { PipelineService } from './service/pipelineService.js'
 import { promises } from 'fs'
-import type { AiPromptData } from './types/aiPromptData'
-import { loadRepos } from './loaders/loadRepos'
+import type { AiPromptData } from './types/aiPromptData.js'
+import { loadRepos } from './loaders/loadRepos.js'
 
 function main() {
   const repos = loadRepos('input.json')

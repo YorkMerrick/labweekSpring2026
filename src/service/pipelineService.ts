@@ -3,7 +3,11 @@ import type { AiPromptData } from '../types/aiPromptData.js'
 import type { Comment, PR, RepoData } from '../types/repo.js'
 
 type PrFetcher = (repoData: RepoData) => Promise<PR[]>
-type CommentFetcher = (prNumber: number, repoData: RepoData, prAuthor: string) => Promise<Comment[]>
+type CommentFetcher = (
+  prNumber: number,
+  repoData: RepoData,
+  prAuthor: string | null
+) => Promise<Comment[]>
 
 class PipelineService {
   prFetcher: PrFetcher

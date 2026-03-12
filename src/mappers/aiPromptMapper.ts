@@ -1,6 +1,6 @@
-import type { AiPromptRepoData } from '../types/aiPromptData'
-import type { PRWithComments, RepoData } from '../types/repo'
-import { aiPromptAuthorDetailsMapper } from './aiPromptAuthorDetailsMapper'
+import type { AiPromptRepoData } from '../types/aiPromptData.js'
+import type { PRWithComments, RepoData } from '../types/repo.js'
+import { aiPromptAuthorDetailsMapper } from './aiPromptAuthorDetailsMapper.js'
 
 function aiPromptMapper(repo: RepoData, prsWithComments: PRWithComments[]): AiPromptRepoData {
   return {

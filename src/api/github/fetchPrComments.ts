@@ -4,7 +4,7 @@ import { octokit } from '../clients/octokit.js'
 async function fetchPrComments(
   prNumber: number,
   repoData: RepoData,
-  prAuthor: string
+  prAuthor: string | null
 ): Promise<Comment[]> {
   const rawComments = await octokit.rest.pulls.listReviews({
     owner: repoData.owner,
@@ -19,7 +19,7 @@ async function fetchPrComments(
   const comments: Comment[] = filteredComments.map((comment) => ({
     id: comment.id,
     body: comment.body ?? '',
-    author: prAuthor,
+    author: prAuthor ?? 'unknown',
   }))
 
   return comments
