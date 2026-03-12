@@ -1,8 +1,9 @@
 import { octokit } from '../clients/octokit.js'
 import type { PR, RepoData } from '../../types/repo.js'
+import type { OctokitResponseData } from '../../types/octokitType.js'
 
 async function fetchPrs(repoData: RepoData): Promise<PR[]> {
-  const rawPrs = await octokit.rest.pulls
+  const rawPrs: OctokitResponseData = await octokit.rest.pulls
     .list({
       owner: repoData.owner,
       repo: repoData.repo,
