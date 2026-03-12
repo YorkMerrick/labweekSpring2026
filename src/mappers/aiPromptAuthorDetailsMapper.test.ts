@@ -24,4 +24,24 @@ describe('aiPromptAuthorDetailsMapper', () => {
 
     expect(result).toEqual(expected)
   })
+  it('handles null author details', () => {
+    const pr: PR = {
+      title: 'Fix bug',
+      number: 43,
+      authorName: null,
+      authorEmail: null,
+      url: '',
+      createdAt: '',
+      lastUpdated: '',
+    }
+
+    const expected: AiPromptAuthorDetails = {
+      authorName: null,
+      authorEmail: null,
+    }
+
+    const result = aiPromptAuthorDetailsMapper(pr)
+
+    expect(result).toEqual(expected)
+  })
 })

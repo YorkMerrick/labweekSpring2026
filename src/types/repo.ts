@@ -7,8 +7,8 @@ export type Comment = {
 export type PR = {
   number: number
   title: string
-  authorName: string
-  authorEmail: string
+  authorName: string | null
+  authorEmail: string | null
   url: string
   createdAt: string
   lastUpdated: string
