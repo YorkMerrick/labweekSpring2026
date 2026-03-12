@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Weekly Engineering Digest</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: #f7f9fc;
+        margin: 0;
+        padding: 40px;
+        color: #1e1e1e;
+        line-height: 1.6;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        color: #0b6efd;
+      }
+      h2 {
+        margin-top: 40px;
+        color: #0b6efd;
+        border-bottom: 2px solid #d9e3f5;
+        padding-bottom: 6px;
+      }
+      .section {
+        background: #ffffff;
+        border: 1px solid #dce3eb;
+        border-radius: 8px;
+        padding: 20px 24px;
+        margin-top: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      ul {
+        margin-left: 20px;
+      }
+      .label {
+        font-weight: 700;
+        color: #444;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Weekly Engineering Digest</h1>
+
+    <div class="section">
+      <h2>Tooling &amp; Build System Updates</h2>
+      <ul>
+        <li>AGP 9 upgrade updated convention plugins, Kotlin test libs, and CI task names.</li>
+        <li>Snapshots Maven repo enabled for Conductor + UI toolkit snapshot builds.</li>
+        <li>GitLab regression UI test job updated to new managed‑device task naming.</li>
+      </ul>
+      <p>
+        <span class="label">Impact:</span> Tooling alignment needed across modules for stable
+        builds.
+      </p>
+      <p>
+        <span class="label">Action Consideration:</span> Teams may want to confirm local IDE/Gradle
+        sync stability.
+      </p>
+      <p><span class="label">Context Contact:</span> wezley98</p>
+    </div>
+
+    <div class="section">
+      <h2>Environment / Developer Readiness</h2>
+      <ul>
+        <li>Coroutine test setup modernised using UnconfinedTestDispatcher.</li>
+        <li>Initial connectivity state added to connectivity flow.</li>
+        <li>New theme/typography assets loaded at app startup for News.</li>
+      </ul>
+      <p>
+        <span class="label">Impact:</span> Developers may see behaviour changes in test harnesses
+        and theme init paths.
+      </p>
+      <p><span class="label">Action:</span> No Immediate Action.</p>
+      <p><span class="label">Context Contact:</span> TomHyde1 / IcemarkUK</p>
+    </div>
+
+    <div class="section">
+      <h2>Feature Additions</h2>
+      <ul>
+        <li>Added optional timestamp to video navigation + web widget data flows.</li>
+        <li>Introduced personalisation CMP vendor gating analytics activation.</li>
+        <li>Added runtime theming + News‑specific icon overrides.</li>
+      </ul>
+      <p>
+        <span class="label">Impact:</span> New metadata and feature‑flag‑dependent flows may affect
+        UI behaviour.
+      </p>
+      <p>
+        <span class="label">Action Consideration:</span> Awareness for teams integrating new video
+        or News surfaces.
+      </p>
+      <p><span class="label">Context Contact:</span> Lozzas‑Teachest / TomHyde1 / IcemarkUK</p>
+    </div>
+
+    <div class="section">
+      <h2>Refactoring &amp; Architecture</h2>
+      <ul>
+        <li>
+          Content‑grouping models moved from common to new dedicated modules with DI separation.
+        </li>
+        <li>Tracking architecture split into narrower interfaces (Video/Article/Followable).</li>
+        <li>Tracking gating logic centralised into new IsTrackingEnabledUseCase.</li>
+      </ul>
+      <p>
+        <span class="label">Impact:</span> Module boundaries tightened; imports/DI graphs updated.
+      </p>
+      <p>
+        <span class="label">Action Consideration:</span> Teams referencing these models or DI
+        bindings should sync imports.
+      </p>
+      <p><span class="label">Context Contact:</span> YorkMerrick / TomHyde1</p>
+    </div>
+
+    <div class="section">
+      <h2>Testing Changes</h2>
+      <ul>
+        <li>Test migrations to JUnit5 via Kotlin’s JUnit5 integration.</li>
+        <li>Updated test fakes for new session‑type parameters.</li>
+        <li>Heartbeat + connectivity tests expanded for flow‑reaction behaviour.</li>
+      </ul>
+      <p>
+        <span class="label">Impact:</span> Test infrastructure more consistent with new AGP/Kotlin
+        ecosystem.
+      </p>
+      <p><span class="label">Action:</span> No Immediate Action.</p>
+      <p><span class="label">Context Contact:</span> wezley98 / GinaHooton</p>
+    </div>
+
+    <div class="section">
+      <h2>Behavioural / Runtime Changes</h2>
+      <ul>
+        <li>Heartbeat start/stop now reacts dynamically to connectivity changes.</li>
+        <li>Session flows enriched with sessionType and isLoginJourney context.</li>
+        <li>Tracking enablement now fully gated by personalisation + remote config.</li>
+      </ul>
+      <p>
+        <span class="label">Impact:</span> Potential shifts in runtime tracking, session handling,
+        and heartbeat stability.
+      </p>
+      <p>
+        <span class="label">Action Consideration:</span> Cross‑feature features should be aware of
+        changed gating logic.
+      </p>
+      <p><span class="label">Context Contact:</span> wezley98 / GinaHooton / TomHyde1</p>
+    </div>
+
+    <div class="section">
+      <h2>Risks, Dependencies &amp; Cross‑Team Considerations</h2>
+      <ul>
+        <li>Snapshot dependencies (Conductor + UI toolkit) may introduce variability.</li>
+        <li>New CMP vendor and tracking gating behaviour may influence analytics pipelines.</li>
+        <li>New theme/typography assets and bottom‑nav overrides affect UI consistency.</li>
+      </ul>
+      <p>
+        <span class="label">Impact:</span> Coordination helpful when integrating tracking, theme, or
+        session behaviour.
+      </p>
+      <p>
+        <span class="label">Action Consideration:</span> Monitor for regressions in areas consuming
+        these cross‑module flows.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>TL;DR</h2>
+      <ul>
+        <li>Snapshot‑based tooling + AGP 9 upgrades require ecosystem alignment.</li>
+        <li>Tracking architecture refactored with new gating + CMP personalisation logic.</li>
+        <li>Session flows updated with sessionType and login‑journey context.</li>
+        <li>Runtime theming + News icons introduced with new assets and overrides.</li>
+        <li>Content‑grouping models modularised, cleaning architecture boundaries.</li>
+      </ul>
+    </div>
+  </body>
+</html>
