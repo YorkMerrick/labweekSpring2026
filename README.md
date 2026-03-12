@@ -33,6 +33,10 @@ cdk deploy
 
 This will deploy the CDK stack to AWS, creating the appropriate secrets, s3 and lambda.
 
+### To be noted
+
+> In order for this to work on a repository, it needs to turn on copilot reviews on all pull requests.
+
 ### Example output Android
 
 ```
