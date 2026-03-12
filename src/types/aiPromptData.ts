@@ -10,7 +10,7 @@ export type AiPromptRepoData = {
 export type AiPromptPrData = {
   prName: string
   author: AiPromptAuthorDetails
-  comments: Comment[]
+  overview: Comment | null
 }
 
 export type AiPromptAuthorDetails = {

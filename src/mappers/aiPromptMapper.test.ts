@@ -40,15 +40,12 @@ describe('aiPromptMapper', () => {
         {
           prName: 'Add feature',
           author: { authorName: 'Alice', authorEmail: 'alice@example.com' },
-          comments: [
-            { id: 101, author: 'Reviewer1', body: 'Looks good' },
-            { id: 102, author: 'Reviewer2', body: 'Please fix typo' },
-          ],
+          overview: { id: 101, author: 'Reviewer1', body: 'Looks good' },
         },
         {
           prName: 'Fix bug',
           author: { authorName: 'Bob', authorEmail: 'bob@example.com' },
-          comments: [],
+          overview: null,
         },
       ],
     }
