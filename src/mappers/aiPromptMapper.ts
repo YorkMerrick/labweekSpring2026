@@ -13,7 +13,8 @@ function aiPromptMapper(repo: RepoData, prsWithComments: PRWithComments[]): AiPr
         author: aiPromptAuthorDetailsMapper(pr),
         overview: comments[0] ?? null,
       }))
-      .filter((pr) => !blacklistAuthors.includes(pr.author.authorName ?? '')),
+      .filter((pr) => !blacklistAuthors.includes(pr.author.authorName ?? ''))
+      .filter((pr) => pr.overview !== null),
   }
   return promptData
 }
