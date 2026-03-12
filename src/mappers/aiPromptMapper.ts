@@ -2,6 +2,8 @@ import type { AiPromptRepoData } from '../types/aiPromptData.js'
 import type { PRWithComments, RepoData } from '../types/repo.js'
 import { aiPromptAuthorDetailsMapper } from './aiPromptAuthorDetailsMapper.js'
 
+const blacklistAuthors = ['SVC-GDP-BOT']
+
 function aiPromptMapper(repo: RepoData, prsWithComments: PRWithComments[]): AiPromptRepoData {
   const promptData: AiPromptRepoData = {
     repoName: repo.repo,
@@ -11,7 +13,7 @@ function aiPromptMapper(repo: RepoData, prsWithComments: PRWithComments[]): AiPr
         author: aiPromptAuthorDetailsMapper(pr),
         overview: comments[0] ?? null,
       }))
-      .filter((pr) => pr.author.authorName !== 'SVC-GDP-BOT'),
+      .filter((pr) => !blacklistAuthors.includes(pr.author.authorName ?? '')),
   }
   return promptData
 }
