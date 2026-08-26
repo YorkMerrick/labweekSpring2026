@@ -68,3 +68,4 @@ dist
 .prettierrc
 tsconfig.json
 README.md
+drizzle/
