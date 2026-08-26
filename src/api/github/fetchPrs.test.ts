@@ -62,8 +62,8 @@ describe('fetchPrs', () => {
       {
         number: 2,
         title: 'Fix bug',
-        authorName: 'unknown', // fallback for missing user
-        authorEmail: 'unknown', // fallback for missing email
+        authorName: null, // null for missing user
+        authorEmail: null, // null for missing email
         url: 'https://github.com/owner/repo/pull/2',
         createdAt: '2026-03-03T12:00:00Z',
         lastUpdated: '2026-03-04T12:00:00Z',

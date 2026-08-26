@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import type { RepoData, PR, Comment } from '../types/repo'
 import type { AiPromptData } from '../types/aiPromptData'
-import { PipelineService } from './pipelineService'
+import { PipelineService, type CommentFetcher, type PrFetcher } from './pipelineService'
 
 describe('PipelineService', () => {
-  let mockPrFetcher: (repo: RepoData) => Promise<PR[]>
-  let mockCommentFetcher: (prNumber: number, repo: RepoData) => Promise<Comment[]>
+  let mockPrFetcher: PrFetcher
+  let mockCommentFetcher: CommentFetcher
   let service: PipelineService
 
   const repoList: RepoData[] = [
@@ -54,28 +54,22 @@ describe('PipelineService', () => {
       {
         prName: 'PR1',
         author: { authorName: 'Alice', authorEmail: 'alice@example.com' },
-        comments: [{ id: 101, author: 'Reviewer1', body: 'Looks good' }],
+        overview: { id: 101, author: 'Reviewer1', body: 'Looks good' },
       },
     ])
 
-    // Repo 2
+    // Repo 2: only the first comment of each PR is retained as the overview.
     expect(result[1]!.repoName).toBe('repo2')
     expect(result[1]!.prsData).toEqual([
       {
         prName: 'PR2',
         author: { authorName: 'Bob', authorEmail: 'bob@example.com' },
-        comments: [
-          { id: 21, author: 'Reviewer2', body: 'Needs work' },
-          { id: 22, author: 'Reviewer3', body: 'Approved' },
-        ],
+        overview: { id: 21, author: 'Reviewer2', body: 'Needs work' },
       },
       {
         prName: 'PR3',
         author: { authorName: 'Charlie', authorEmail: 'charlie@example.com' },
-        comments: [
-          { id: 31, author: 'Reviewer2', body: 'Needs work' },
-          { id: 32, author: 'Reviewer3', body: 'Approved' },
-        ],
+        overview: { id: 31, author: 'Reviewer2', body: 'Needs work' },
       },
     ])
   })
@@ -88,8 +82,8 @@ describe('PipelineService', () => {
     expect(mockPrFetcher).toHaveBeenCalledWith(repoList[1])
 
     expect(mockCommentFetcher).toHaveBeenCalledTimes(3)
-    expect(mockCommentFetcher).toHaveBeenCalledWith(1, repoList[0])
-    expect(mockCommentFetcher).toHaveBeenCalledWith(2, repoList[1])
-    expect(mockCommentFetcher).toHaveBeenCalledWith(3, repoList[1])
+    expect(mockCommentFetcher).toHaveBeenCalledWith(1, repoList[0], 'Alice')
+    expect(mockCommentFetcher).toHaveBeenCalledWith(2, repoList[1], 'Bob')
+    expect(mockCommentFetcher).toHaveBeenCalledWith(3, repoList[1], 'Charlie')
   })
 })

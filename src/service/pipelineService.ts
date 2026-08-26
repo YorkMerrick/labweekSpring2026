@@ -35,4 +35,4 @@ class PipelineService {
   }
 }
 
-export { PipelineService }
+export { PipelineService, type PrFetcher, type CommentFetcher }
