@@ -33,6 +33,40 @@ cdk deploy
 
 This will deploy the CDK stack to AWS, creating the appropriate secrets, s3 and lambda.
 
+### Persistence
+
+PR and review data is persisted to LevelDB so repeat runs hit the database instead of the GitHub API.
+The store is schemaless, so there are no migrations to run.
+
+The database location is set by `DATABASE_PATH` (defaults to `./data/digest-level`).
+
+Each run still lists PRs for a repo (one cheap API call) because that response carries the
+`lastUpdated` timestamp used to judge freshness. Reviews are the expensive part — one call *per PR* —
+and are only refetched when a PR is new or has actually changed. On a warm database a run that
+previously cost ~100 review calls per repo costs none.
+
+Every run prints a summary, for example:
+
+```
+Reviews: 96 from db, 4 from GitHub (100 PRs persisted)
+```
+
+#### Layout
+
+Reviews are stored inside their PR record rather than in a separate collection, so checking whether a
+PR is current and reading its reviews is a single key lookup:
+
+```
+!repos!<owner>/<repo>                  -> { owner, repo, lastSyncedAt }
+!prs!<owner>/<repo>/<paddedNumber>     -> { ...pr, reviewsSyncedForLastUpdated, reviews: [...] }
+```
+
+PR numbers are zero padded because LevelDB sorts keys lexicographically, which would otherwise put
+PR 10 before PR 2.
+
+> LevelDB holds an exclusive lock on its directory, so only one process can use the database at a
+> time. Two overlapping runs will fail rather than queue.
+
 ### To be noted
 
 > In order for this to work on a repository, it needs to turn on copilot reviews on all pull requests.
