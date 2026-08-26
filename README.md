@@ -33,6 +33,36 @@ cdk deploy
 
 This will deploy the CDK stack to AWS, creating the appropriate secrets, s3 and lambda.
 
+### Persistence
+
+PR and review data is persisted to SQLite so repeat runs hit the database instead of the GitHub API.
+Migrations are applied automatically on startup, so no manual step is needed.
+
+The database location is set by `DATABASE_PATH` (defaults to `./data/digest.db`).
+
+Each run still lists PRs for a repo (one cheap API call) because that response carries the
+`lastUpdated` timestamp used to judge freshness. Reviews are the expensive part — one call *per PR* —
+and are only refetched when a PR is new or has actually changed. On a warm database a run that
+previously cost ~100 review calls per repo costs none.
+
+Every run prints a summary, for example:
+
+```
+Reviews: 96 from db, 4 from GitHub (100 PRs persisted)
+```
+
+After changing `src/db/schema.ts`, regenerate the migration:
+
+```bash
+npm run db:generate
+```
+
+Migrations can also be applied on their own:
+
+```bash
+npm run db:migrate
+```
+
 ### To be noted
 
 > In order for this to work on a repository, it needs to turn on copilot reviews on all pull requests.
@@ -43,74 +73,74 @@ This will deploy the CDK stack to AWS, creating the appropriate secrets, s3 and 
 Weekly Engineering Digest
 Tooling & Build System Updates
 
-AGP 9 upgrade updated convention plugins, Kotlin test libs, and CI task names.
-Snapshots Maven repo enabled for Conductor + UI toolkit snapshot builds.
-GitLab regression UI test job updated to new managed‑device task naming.
-Impact: Tooling alignment needed across modules for stable builds.
-Action Consideration: Teams may want to confirm local IDE/Gradle sync stability.
-Context Contact: wezley98
+    AGP 9 upgrade updated convention plugins, Kotlin test libs, and CI task names.
+    Snapshots Maven repo enabled for Conductor + UI toolkit snapshot builds.
+    GitLab regression UI test job updated to new managed‑device task naming.
+    Impact: Tooling alignment needed across modules for stable builds.
+    Action Consideration: Teams may want to confirm local IDE/Gradle sync stability.
+    Context Contact: wezley98
 
 Environment / Developer Readiness
 
-Coroutine test setup modernised using UnconfinedTestDispatcher.
-Initial connectivity state added to connectivity flow.
-New theme/typography assets loaded at app startup for News.
-Impact: Developers may see behaviour changes in test harnesses and theme init paths.
-No Immediate Action.
-Context Contact: TomHyde1 / IcemarkUK
+    Coroutine test setup modernised using UnconfinedTestDispatcher.
+    Initial connectivity state added to connectivity flow.
+    New theme/typography assets loaded at app startup for News.
+    Impact: Developers may see behaviour changes in test harnesses and theme init paths.
+    No Immediate Action.
+    Context Contact: TomHyde1 / IcemarkUK
 
 Feature Additions
 
-Added optional timestamp to video navigation + web widget data flows.
-Introduced personalisation CMP vendor gating analytics activation.
-Added runtime theming + News‑specific icon overrides.
-Impact: New metadata and feature‑flag‑dependent flows may affect UI behaviour.
-Action Consideration: Awareness for teams integrating new video or News surfaces.
-Context Contact: Lozzas-Teachest / TomHyde1 / IcemarkUK
+    Added optional timestamp to video navigation + web widget data flows.
+    Introduced personalisation CMP vendor gating analytics activation.
+    Added runtime theming + News‑specific icon overrides.
+    Impact: New metadata and feature‑flag‑dependent flows may affect UI behaviour.
+    Action Consideration: Awareness for teams integrating new video or News surfaces.
+    Context Contact: Lozzas-Teachest / TomHyde1 / IcemarkUK
 
 Refactoring & Architecture
 
-Content‑grouping models moved from common to new dedicated modules with DI separation.
-Tracking architecture split into narrower interfaces (Video/Article/Followable).
-Tracking gating logic centralised into new IsTrackingEnabledUseCase.
-Impact: Module boundaries tightened; imports/DI graphs updated.
-Action Consideration: Teams referencing these models or DI bindings should sync imports.
-Context Contact: YorkMerrick / TomHyde1
+    Content‑grouping models moved from common to new dedicated modules with DI separation.
+    Tracking architecture split into narrower interfaces (Video/Article/Followable).
+    Tracking gating logic centralised into new IsTrackingEnabledUseCase.
+    Impact: Module boundaries tightened; imports/DI graphs updated.
+    Action Consideration: Teams referencing these models or DI bindings should sync imports.
+    Context Contact: YorkMerrick / TomHyde1
 
 Testing Changes
 
-Test migrations to JUnit5 via Kotlin’s JUnit5 integration.
-Updated test fakes for new session‑type parameters.
-Heartbeat + connectivity tests expanded for flow‑reaction behaviour.
-Impact: Test infrastructure more consistent with new AGP/Kotlin ecosystem.
-No Immediate Action.
-Context Contact: wezley98 / GinaHooton
+    Test migrations to JUnit5 via Kotlin’s JUnit5 integration.
+    Updated test fakes for new session‑type parameters.
+    Heartbeat + connectivity tests expanded for flow‑reaction behaviour.
+    Impact: Test infrastructure more consistent with new AGP/Kotlin ecosystem.
+    No Immediate Action.
+    Context Contact: wezley98 / GinaHooton
 
 Behavioural / Runtime Changes
 
-Heartbeat start/stop now reacts dynamically to connectivity changes.
-Session flows enriched with sessionType and isLoginJourney context.
-Tracking enablement now fully gated by personalisation + remote config.
-Impact: Potential shifts in runtime tracking, session handling, and heartbeat stability.
-Action Consideration: Cross‑feature features should be aware of changed gating logic.
-Context Contact: wezley98 / GinaHooton / TomHyde1
+    Heartbeat start/stop now reacts dynamically to connectivity changes.
+    Session flows enriched with sessionType and isLoginJourney context.
+    Tracking enablement now fully gated by personalisation + remote config.
+    Impact: Potential shifts in runtime tracking, session handling, and heartbeat stability.
+    Action Consideration: Cross‑feature features should be aware of changed gating logic.
+    Context Contact: wezley98 / GinaHooton / TomHyde1
 
 Risks, Dependencies & Cross‑Team Considerations
 
-Snapshot dependencies (Conductor + UI toolkit) may introduce variability.
-New CMP vendor and tracking gating behaviour may influence analytics pipelines.
-New theme/typography assets and bottom‑nav overrides affect UI consistency.
-Impact: Coordination helpful when integrating tracking, theme, or session behaviour.
-Action Consideration: Monitor for regressions in areas consuming these cross‑module flows.
+    Snapshot dependencies (Conductor + UI toolkit) may introduce variability.
+    New CMP vendor and tracking gating behaviour may influence analytics pipelines.
+    New theme/typography assets and bottom‑nav overrides affect UI consistency.
+    Impact: Coordination helpful when integrating tracking, theme, or session behaviour.
+    Action Consideration: Monitor for regressions in areas consuming these cross‑module flows.
 
 
 TL;DR
 
-Snapshot‑based tooling + AGP 9 upgrades require ecosystem alignment.
-Tracking architecture refactored with new gating + CMP personalisation logic.
-Session flows updated with sessionType and login‑journey context.
-Runtime theming + News icons introduced with new assets and overrides.
-Content‑grouping models modularised, cleaning architecture boundaries.
+    Snapshot‑based tooling + AGP 9 upgrades require ecosystem alignment.
+    Tracking architecture refactored with new gating + CMP personalisation logic.
+    Session flows updated with sessionType and login‑journey context.
+    Runtime theming + News icons introduced with new assets and overrides.
+    Content‑grouping models modularised, cleaning architecture boundaries.
 ```
 
 ### Example output iOS
@@ -119,75 +149,148 @@ Content‑grouping models modularised, cleaning architecture boundaries.
 Weekly Engineering Digest
 Tooling & Build System Updates
 
-Restored missing NewsGB launch‑screen asset catalog to fix local News build failures.
-Updated Xcode project references across multiple PRs, mainly adding new files and relocating feature‑toggle sources.
-Bumped gdp‑streaming‑auth‑framework-ios to 4.1.0 with updated transitive security dependency.
-Impact: Improves build stability and aligns project structure.
-Action Consideration: Awareness only; no immediate workflow change.
-Context Contact: AndyNattrass, ryangibson-sky
+    Restored missing NewsGB launch‑screen asset catalog to fix local News build failures.
+    Updated Xcode project references across multiple PRs, mainly adding new files and relocating feature‑toggle sources.
+    Bumped gdp‑streaming‑auth‑framework-ios to 4.1.0 with updated transitive security dependency.
+    Impact: Improves build stability and aligns project structure.
+    Action Consideration: Awareness only; no immediate workflow change.
+    Context Contact: AndyNattrass, ryangibson-sky
 
 Environment / Developer Readiness
 
-Feature‑toggle keys migrated to consistent snake_case across the codebase.
-Deep‑link toggle handling updated with safer production gating.
-UI tests restructured with new F1StreamSelector screen objects.
-Impact: Reduces ambiguity and improves local debugging and test reliability.
-Action Consideration: Teams may want to ensure local tooling recognises updated toggle names.
-Context Contact: roryobryan-sky, TKN02
+    Feature‑toggle keys migrated to consistent snake_case across the codebase.
+    Deep‑link toggle handling updated with safer production gating.
+    UI tests restructured with new F1StreamSelector screen objects.
+    Impact: Reduces ambiguity and improves local debugging and test reliability.
+    Action Consideration: Teams may want to ensure local tooling recognises updated toggle names.
+    Context Contact: roryobryan-sky, TKN02
 
 Feature Additions
 
-Added SubscriptionService and ProductService wired into app startup via Remote Config.
-Introduced profile name display via JWT decoding for More Menu.
-Added MoreMenuHeaderTitle domain model and use case for dynamic header resolution.
-Impact: Lays groundwork for subscriptions and enhances personalised UI.
-Action Consideration: Awareness of new app‑level dependencies and JWT‑based name flows.
-Context Contact: tonyzhou-merapar, ClaudiaDanciu
+    Added SubscriptionService and ProductService wired into app startup via Remote Config.
+    Introduced profile name display via JWT decoding for More Menu.
+    Added MoreMenuHeaderTitle domain model and use case for dynamic header resolution.
+    Impact: Lays groundwork for subscriptions and enhances personalised UI.
+    Action Consideration: Awareness of new app‑level dependencies and JWT‑based name flows.
+    Context Contact: tonyzhou-merapar, ClaudiaDanciu
 
 Refactoring & Architecture
 
-Consolidated feature‑toggle logic into FeatureToggleService, removing ad‑hoc helpers.
-Reorganised related files in Xcode project for clearer module boundaries.
-Removed legacy StreamSelector tests and replaced with focused F1 variants.
-Impact: Simplifies toggle management and improves test maintainability.
-Action Consideration: No immediate action; architectural clarity improved.
-Context Contact: roryobryan-sky, TKN02
+    Consolidated feature‑toggle logic into FeatureToggleService, removing ad‑hoc helpers.
+    Reorganised related files in Xcode project for clearer module boundaries.
+    Removed legacy StreamSelector tests and replaced with focused F1 variants.
+    Impact: Simplifies toggle management and improves test maintainability.
+    Action Consideration: No immediate action; architectural clarity improved.
+    Context Contact: roryobryan-sky, TKN02
 
 Testing Changes
 
-Added new unit tests for toggle deep‑linking, subscription flows, and More Menu name decoding.
-UI test plans updated to register F1‑specific selectors.
-Multiple PRs introduced small test fixture updates for renamed toggle keys.
-Impact: Strengthens regression protection in new and refactored areas.
-Action Consideration: Watch for renamed fixtures when updating downstream tests.
-Context Contact: roryobryan-sky, tonyzhou-merapar, TKN02
+    Added new unit tests for toggle deep‑linking, subscription flows, and More Menu name decoding.
+    UI test plans updated to register F1‑specific selectors.
+    Multiple PRs introduced small test fixture updates for renamed toggle keys.
+    Impact: Strengthens regression protection in new and refactored areas.
+    Action Consideration: Watch for renamed fixtures when updating downstream tests.
+    Context Contact: roryobryan-sky, tonyzhou-merapar, TKN02
 
 Behavioural / Runtime Changes
 
-Updated link handling so webLink vs externalWebLink actions preserve true routing semantics.
-Applied baseline offset to fix clipped UINavigationBar titles.
-More Menu title now updates reactively based on login state and ID token changes.
-Impact: User‑visible behavioural correctness improvements across navigation and link routing.
-Action Consideration: Awareness for QA when validating link flows and navigation titles.
-Context Contact: ScruffyHipster, sergeyandreev, ClaudiaDanciu
+    Updated link handling so webLink vs externalWebLink actions preserve true routing semantics.
+    Applied baseline offset to fix clipped UINavigationBar titles.
+    More Menu title now updates reactively based on login state and ID token changes.
+    Impact: User‑visible behavioural correctness improvements across navigation and link routing.
+    Action Consideration: Awareness for QA when validating link flows and navigation titles.
+    Context Contact: ScruffyHipster, sergeyandreev, ClaudiaDanciu
 
 Risks, Dependencies & Cross‑Team Considerations
 
-Introduction of JWT‑based name decoding adds dependency on ID token stability.
-Subscription flows now integrate with backend responses and Remote Config.
-Updated security frameworks may affect downstream platform integrations.
-Impact: Cross‑team awareness beneficial around auth, subscriptions, and security alignment.
-Action Consideration: No immediate action; monitor for token schema or backend contract changes.
-Context Contact: tonyzhou-merapar, ryangibson-sky
+    Introduction of JWT‑based name decoding adds dependency on ID token stability.
+    Subscription flows now integrate with backend responses and Remote Config.
+    Updated security frameworks may affect downstream platform integrations.
+    Impact: Cross‑team awareness beneficial around auth, subscriptions, and security alignment.
+    Action Consideration: No immediate action; monitor for token schema or backend contract changes.
+    Context Contact: tonyzhou-merapar, ryangibson-sky
 
 
 TL;DR
 
-Feature‑toggle system consolidated and renamed for consistency.
-New subscription and profile‑name flows integrated into app startup.
-Multiple asset, routing, and UI correctness fixes applied.
-Significant test restructuring, especially for F1 selectors.
-Dependency bumps and project reorganisation improve build stability.
+    Feature‑toggle system consolidated and renamed for consistency.
+    New subscription and profile‑name flows integrated into app startup.
+    Multiple asset, routing, and UI correctness fixes applied.
+    Significant test restructuring, especially for F1 selectors.
+    Dependency bumps and project reorganisation improve build stability.
+```
+
+### Example output BFF
+
+```
+Weekly Engineering Digest
+Tooling & Build System Updates
+
+    Schema updates across multiple PRs introduce new optional fields (header, external webview variants, entitlement types).
+    Snapshot refreshes widely applied, signalling contract/token changes across test suites.
+    OpenAPI specs evolve in multiple areas (article links, entitlements, badge deprecation).
+    Impact: Tooling/IDE schema alignment may be required for smooth compilation.
+    Action Consideration: Awareness only—teams may monitor for type drift.
+    Context Contact: Multiple authors (notably CharlesMagiera1, rafal-zukowski, Miles-Freemantle).
+
+Environment / Developer Readiness
+
+    New env vars introduced for Entitlements API in multiple environments (Docker, Helm, Cypress).
+    XVP session retry logic now header‑aware, potentially altering local error reproduction.
+    Consent management config extended with new vendor ID.
+    Impact: Local/test environments may surface new required configuration.
+    Action Consideration: Awareness only.
+
+Feature Additions
+
+    New /entitlements endpoint with full upstream integration and paywall logic.
+    SPXL match header support added behind feature flag.
+    Multiple-channel support introduced for VCA football events.
+    Impact: New APIs and feature‑flagged behaviours may affect downstream consumers.
+    Action Consideration: Coordinate awareness with dependent feature teams.
+    Context Contact: rafal-zukowski, maciejmiazdzyk-merapar, Miles-Freemantle.
+
+Refactoring & Architecture
+
+    Deprecation and full removal of badge field in favour of icon variants.
+    Link mapping refactored to centralised allowlist logic.
+    Team icon URL logic centralised into shared utilities.
+    Impact: Cleaner, more maintainable mapping architecture; schema changes may ripple.
+    Action Consideration: No immediate action; monitor for legacy usage.
+    Context Contact: Miles-Freemantle, CharlesMagiera1.
+
+Testing Changes
+
+    Broad snapshot updates across integration and unit tests (navigation, F1, paywall, event centre).
+    New tests added for entitlement flows, XVP retry modes, match header behaviour, and VCA multi‑channel.
+    WireMock coverage extended to match new endpoints and conditions.
+    Impact: CI stability may shift temporarily during test updates.
+    Action Consideration: No follow‑up needed; tests align with new behaviours.
+
+Behavioural / Runtime Changes
+
+    iOS profile screen gated off behind platform logic.
+    Race Control tab removed temporarily due to incident response.
+    XVP session retries now conditional on session‑type header.
+    Impact: Visible runtime/UI behaviour changes across territories, plus altered session creation flow.
+    Action Consideration: Awareness for QA/analytics consumers.
+    Context Contact: LauraRowlands1, CharlesMagiera1.
+
+Risks, Dependencies & Cross‑Team Considerations
+
+    Schema drift risk where OpenAPI spec updates lag (noted for personalisation vendor and entitlements userId).
+    Feature flags (spxl_match_header, PROFILE_SCREEN, premium proposition) now gate more critical logic.
+    Multiple integrations (WireMock, entitlement upstream, SPXL, VCA) expand external dependency surface.
+    Impact: Potential for mismatch between contract, docs, and behaviour.
+    Action Consideration: Maintain awareness of flag states and spec alignment needs.
+
+TL;DR
+
+    Significant schema, snapshot, and contract changes across multiple domains.
+    New /entitlements endpoint, SPXL header integration, and VCA multi‑channel support landed.
+    Runtime changes include iOS profile gating and temporary removal of Race Control.
+    XVP session retry behaviour now header‑dependent.
+    Widespread refactors and field deprecations improve consistency but require ongoing awareness.
 ```
 
 ### Prompt
